@@ -1,6 +1,6 @@
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./lib"
-import Welcome from "./Welcome";
+import WhoTextedWhatGame from "./WhoTextedWhatGame";
 
 export default function App() {
   return (
@@ -8,7 +8,7 @@ export default function App() {
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Welcome/>}/>
+            <Route path="/" element={<WhoTextedWhatGame/>}/>
           </Routes>
         </BrowserRouter>
       </div>
