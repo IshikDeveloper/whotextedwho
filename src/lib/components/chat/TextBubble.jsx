@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 export default function TextBubble({
-  text,
+  children,  // ✅ Changed from 'text' to 'children'
   color = "blue",
   side = "left",
   className = "",
@@ -25,7 +25,7 @@ export default function TextBubble({
       <div
         className={`relative max-w-[75%] px-4 py-2 rounded-2xl font-mono ${bubbleColor} ${className}`}
       >
-        {text}
+        {children}  {/* ✅ Changed from {text} */}
         {/* Bubble tail */}
         <div
           className={`absolute bottom-0 ${
