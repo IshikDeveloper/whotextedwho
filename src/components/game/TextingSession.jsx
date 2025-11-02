@@ -161,11 +161,10 @@ export default function TextingSession({
               duration: 0.5,
               repeat: isLowTime ? Infinity : 0,
             }}
-            className={`px-4 py-2 rounded-full font-mono font-bold ${
-              isLowTime
+            className={`px-4 py-2 rounded-full font-mono font-bold ${isLowTime
                 ? "bg-red-500 text-white"
                 : `${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`
-            }`}
+              }`}
           >
             ⏱️ {formatTime(timeLeft)}
           </motion.div>
@@ -214,7 +213,7 @@ export default function TextingSession({
               >
                 <TextBubble
                   side={isCurrentPlayer ? "right" : "left"}
-                  color={isCurrentPlayer ? bubbleColor : "gray"}
+                  color={msg.bubbleColor || (isCurrentPlayer ? bubbleColor : "gray")}
                 >
                   {msg.text}
                 </TextBubble>
@@ -287,11 +286,10 @@ export default function TextingSession({
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            className={`flex-1 font-mono rounded-xl border px-4 py-3 text-sm focus:border-blue-500 focus:outline-none ${
-              theme === "dark" 
-                ? "border-gray-600 bg-gray-700 text-white" 
+            className={`flex-1 font-mono rounded-xl border px-4 py-3 text-sm focus:border-blue-500 focus:outline-none ${theme === "dark"
+                ? "border-gray-600 bg-gray-700 text-white"
                 : "border-gray-300 bg-white text-black"
-            }`}
+              }`}
             maxLength={500}
             disabled={timeLeft === 0}
           />
@@ -299,11 +297,10 @@ export default function TextingSession({
             whileTap={{ scale: 0.95 }}
             onClick={handleSend}
             disabled={!inputText.trim() || timeLeft === 0}
-            className={`px-6 py-3 rounded-xl font-mono font-bold transition ${
-              inputText.trim() && timeLeft > 0
+            className={`px-6 py-3 rounded-xl font-mono font-bold transition ${inputText.trim() && timeLeft > 0
                 ? "bg-blue-500 text-white hover:bg-blue-600"
                 : `${theme === "dark" ? "bg-gray-700 text-gray-500" : "bg-gray-300 text-gray-500"} cursor-not-allowed`
-            }`}
+              }`}
           >
             Send
           </motion.button>

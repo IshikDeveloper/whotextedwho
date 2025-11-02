@@ -129,7 +129,7 @@ export default function PredictionScreen({
                       >
                         <TextBubble
                           side={isCurrentPlayer ? "right" : "left"}
-                          color={msg.bubbleColor || isCurrentPlayer ? "blue" : "gray"}
+                          color={msg.bubbleColor || (isCurrentPlayer ? "blue" : "gray")}
                         >
                           {msg.text}
                         </TextBubble>
