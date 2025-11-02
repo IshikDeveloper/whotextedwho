@@ -136,7 +136,7 @@ export default function TextingSession({
               ❓
             </div>
             <div>
-              <Text className="text-sm font-bold">{anonymousPartnerName}</Text>
+              <Text className={`text-sm font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>{anonymousPartnerName}</Text>
               <AnimatePresence>
                 {partnerTyping && (
                   <motion.div
@@ -181,7 +181,7 @@ export default function TextingSession({
             animate={{ opacity: 1, scale: 1 }}
             className={`${theme === "dark" ? "bg-blue-500/20" : "bg-blue-500/10"} rounded-xl p-3 text-center mb-4`}
           >
-            <Text className="text-xs">
+            <Text className={`text-xs ${theme === "dark" ? "text-white" : "text-black"}`}>
               🤫 You're chatting anonymously with{" "}
               <strong>{anonymousPartnerName}</strong>
               <br />
@@ -197,7 +197,7 @@ export default function TextingSession({
               transition={{ delay: 0.5 }}
               className="text-center py-8"
             >
-              <Text className="text-sm opacity-50">
+              <Text className={`text-sm opacity-50 ${theme === "dark" ? "text-white" : "text-black"}`}>
                 Say hi to get started! 👋
               </Text>
             </motion.div>
@@ -311,10 +311,10 @@ export default function TextingSession({
 
         {/* Character Counter */}
         <div className="max-w-2xl mx-auto mt-2 flex items-center justify-between px-2">
-          <Text className="text-xs opacity-50">
+          <Text className={`text-xs opacity-50 ${theme === "dark" ? "text-white" : "text-black"}`}>
             💡 Avoid saying names - they'll be filtered!
           </Text>
-          <Text className="text-xs opacity-50">
+          <Text className={`text-xs opacity-50 ${theme === "dark" ? "text-white" : "text-black"}`}>
             {inputText.length}/500
           </Text>
         </div>

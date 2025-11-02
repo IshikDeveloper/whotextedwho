@@ -113,7 +113,7 @@ export default function Lobby({
                         className={`w-6 h-6 rounded-full flex-shrink-0 relative ${getBubbleAvatarStyle(player.bubbleColor)}`}
                       >
                         {getBubbleEmoji(player.bubbleColor) && (
-                          <div className="absolute inset-0 flex items-center justify-center text-[8px]">
+                          <div className="absolute inset-0 flex items-center justify-center text-[6px]">
                             {getBubbleEmoji(player.bubbleColor)}
                           </div>
                         )}
