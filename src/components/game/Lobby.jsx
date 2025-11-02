@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Container, Stack, Button, Text, Heading } from "../../lib";
 import { useTheme } from "../../contexts/ThemeContext";
-import { getBubbleAvatarStyle } from "../../utils/bubbleColors";
+import { getBubbleAvatarStyle, getBubbleEmoji } from "../../utils/bubbleColors";
 
 export default function Lobby({
   roomCode,
