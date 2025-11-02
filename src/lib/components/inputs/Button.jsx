@@ -6,6 +6,7 @@ export default function Button({
   variant = "primary",
   size = "md",
   className = "",
+  theme,
   disabled = false,
 }) {
   const base =
@@ -17,11 +18,11 @@ export default function Button({
   };
   const variants = {
     primary:
-      "bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700",
+      `bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700`,
     ghost:
-      "bg-transparent border border-gray-400 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800",
+      `bg-transparent border border-gray-400 text-${theme === "dark" ? "white" : "black"} hover:${theme === "dark" ? "bg-gray-800" : "bg-gray-100"}`,
     outline:
-      "border border-gray-600 text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800",
+      `border border-gray-600 text-${theme === "dark" ? "white" : "black"} hover:${theme === "dark" ? "bg-gray-800" : "bg-gray-100"}`,
   };
 
   const disabledStyles = "opacity-50 cursor-not-allowed pointer-events-none";

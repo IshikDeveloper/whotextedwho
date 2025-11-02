@@ -74,6 +74,7 @@ export default function WhoTextedWhatGame() {
                 value={playerName}
                 onChange={setPlayerName}
                 placeholder="Enter your name..."
+                theme={theme}
               />
             </div>
 
@@ -128,6 +129,7 @@ export default function WhoTextedWhatGame() {
               <Text className="text-sm opacity-70">🔐 Secret Code</Text>
               <TextField
                 value={secretCode}
+                theme={theme}
                 onChange={setSecretCode}
                 placeholder="Enter codes for special bubble variations!"
                 className="text-center"
@@ -271,6 +273,7 @@ export default function WhoTextedWhatGame() {
               <Text className="text-sm opacity-70">Room Code</Text>
               <TextField
                 value={roomCode}
+                theme={theme}
                 onChange={setRoomCode}
                 placeholder="Enter 6-character code..."
                 className="text-center font-mono uppercase tracking-widest"

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container, Stack, Text, TextBubble } from "../../lib";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function TextingSession({
   anonymousPartnerName = "Player B",
@@ -19,6 +20,7 @@ export default function TextingSession({
   const [typingTimeout, setTypingTimeout] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const { theme } = useTheme();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -120,17 +122,17 @@ export default function TextingSession({
   const isLowTime = timeLeft <= 30;
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`flex flex-col h-screen ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}>
       {/* Header */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 shadow-sm"
+        className={`${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} border-b px-4 py-3 shadow-sm`}
       >
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           {/* Partner Info */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-xl">
+            <div className={`w-10 h-10 rounded-full ${theme === "dark" ? "bg-gray-700" : "bg-gray-300"} flex items-center justify-center text-xl`}>
               ❓
             </div>
             <div>
@@ -141,7 +143,7 @@ export default function TextingSession({
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="text-xs text-gray-500 dark:text-gray-400"
+                    className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-xs`}
                   >
                     typing...
                   </motion.div>
@@ -162,7 +164,7 @@ export default function TextingSession({
             className={`px-4 py-2 rounded-full font-mono font-bold ${
               isLowTime
                 ? "bg-red-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
+                : `${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`
             }`}
           >
             ⏱️ {formatTime(timeLeft)}
@@ -177,7 +179,7 @@ export default function TextingSession({
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-3 text-center mb-4"
+            className={`${theme === "dark" ? "bg-blue-500/20" : "bg-blue-500/10"} rounded-xl p-3 text-center mb-4`}
           >
             <Text className="text-xs">
               🤫 You're chatting anonymously with{" "}
@@ -229,7 +231,7 @@ export default function TextingSession({
                 exit={{ opacity: 0, scale: 0.8 }}
                 className="flex justify-start"
               >
-                <div className="bg-gray-300 dark:bg-gray-700 px-4 py-2 rounded-2xl">
+                <div className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-300"} px-4 py-2 rounded-2xl`}>
                   <motion.div className="flex gap-1">
                     {[0, 1, 2].map((i) => (
                       <motion.div
@@ -240,7 +242,7 @@ export default function TextingSession({
                           repeat: Infinity,
                           delay: i * 0.2,
                         }}
-                        className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full"
+                        className={`${theme === "dark" ? "bg-gray-400" : "bg-gray-500"} w-2 h-2 rounded-full`}
                       />
                     ))}
                   </motion.div>
@@ -262,8 +264,8 @@ export default function TextingSession({
             exit={{ opacity: 0, y: 20 }}
             className="max-w-2xl mx-auto w-full px-4 mb-2"
           >
-            <div className="bg-yellow-500/20 border border-yellow-500/40 rounded-lg p-2 text-center">
-              <Text className="text-xs text-yellow-700 dark:text-yellow-300">
+            <div className={`${theme === "dark" ? "bg-yellow-500/20 border-yellow-500/40" : "bg-yellow-500/20 border-yellow-500/40"} border rounded-lg p-2 text-center`}>
+              <Text className={`${theme === "dark" ? "text-yellow-300" : "text-yellow-700"} text-xs`}>
                 ⚠️ Names were filtered from your message!
               </Text>
             </div>
@@ -275,7 +277,7 @@ export default function TextingSession({
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4 shadow-lg"
+        className={`${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} border-t px-4 py-4 shadow-lg`}
       >
         <div className="max-w-2xl mx-auto flex gap-2">
           <input
@@ -285,7 +287,11 @@ export default function TextingSession({
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            className="flex-1 font-mono rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none dark:text-white"
+            className={`flex-1 font-mono rounded-xl border px-4 py-3 text-sm focus:border-blue-500 focus:outline-none ${
+              theme === "dark" 
+                ? "border-gray-600 bg-gray-700 text-white" 
+                : "border-gray-300 bg-white text-black"
+            }`}
             maxLength={500}
             disabled={timeLeft === 0}
           />
@@ -296,7 +302,7 @@ export default function TextingSession({
             className={`px-6 py-3 rounded-xl font-mono font-bold transition ${
               inputText.trim() && timeLeft > 0
                 ? "bg-blue-500 text-white hover:bg-blue-600"
-                : "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
+                : `${theme === "dark" ? "bg-gray-700 text-gray-500" : "bg-gray-300 text-gray-500"} cursor-not-allowed`
             }`}
           >
             Send

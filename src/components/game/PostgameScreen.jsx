@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Stack, Text, Heading, Button } from "../../lib";
+import { Stack, Text, Heading, Button, Container } from "../../lib";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function PostGameScreen({
   players = [],
@@ -13,22 +14,18 @@ export default function PostGameScreen({
   const [votes, setVotes] = useState({ playAgain: [], menu: [] });
   const [hasVoted, setHasVoted] = useState(false);
   const [currentVote, setCurrentVote] = useState(null);
+  const { theme } = useTheme();
 
-  // Simulate voting (in real app, this comes from WebSocket)
   const handleVote = (voteType) => {
     if (hasVoted) return;
-
     setCurrentVote(voteType);
     setHasVoted(true);
-
-    // Update votes
     setVotes((prev) => ({
       ...prev,
       [voteType]: [...prev[voteType], currentPlayerId],
     }));
   };
 
-  // Check if everyone voted the same way
   const totalVotes = votes.playAgain.length + votes.menu.length;
   const allVotedPlayAgain =
     votes.playAgain.length === players.length && totalVotes === players.length;
@@ -36,19 +33,19 @@ export default function PostGameScreen({
     votes.menu.length === players.length && totalVotes === players.length;
 
   useEffect(() => {
-    if (allVotedPlayAgain) {
-      setTimeout(() => onPlayAgain?.(), 2000);
-    } else if (allVotedMenu) {
-      setTimeout(() => onReturnToMenu?.(), 2000);
-    }
+    if (allVotedPlayAgain) setTimeout(() => onPlayAgain?.(), 2000);
+    else if (allVotedMenu) setTimeout(() => onReturnToMenu?.(), 2000);
   }, [allVotedPlayAgain, allVotedMenu, onPlayAgain, onReturnToMenu]);
 
-  const getPlayerName = (playerId) => {
-    return players.find((p) => p.id === playerId)?.name || "Unknown";
-  };
+  const getPlayerName = (playerId) =>
+    players.find((p) => p.id === playerId)?.name || "Unknown";
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+    <Container
+      className={`min-h-screen flex items-center justify-center p-4 bg-gray-${
+        theme === "dark" ? "900" : "50"
+      }`}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -64,15 +61,23 @@ export default function PostGameScreen({
             >
               {allVotedPlayAgain ? "🎮" : allVotedMenu ? "👋" : "🏁"}
             </motion.div>
-            <Heading level={2} className="mb-2">
+
+            <Heading
+              level={2}
+              className={`mb-2 text-${theme === "dark" ? "white" : "black"}`}
+            >
               {allVotedPlayAgain
                 ? "Starting New Game..."
                 : allVotedMenu
                 ? "Returning to Menu..."
                 : "Game Over!"}
             </Heading>
-            <Text className="text-sm opacity-70">
-              {winner && `${winner.name} won with ${finalScores[winner.id] || 0} points!`}
+
+            <Text
+              className={`text-sm opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+            >
+              {winner &&
+                `${winner.name} won with ${finalScores[winner.id] || 0} points!`}
             </Text>
           </div>
 
@@ -82,9 +87,14 @@ export default function PostGameScreen({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700"
+              className={`rounded-xl p-4 border-2 border-gray-${
+                theme === "dark" ? "700" : "200"
+              } bg-gray-${theme === "dark" ? "800" : "white"}`}
             >
-              <Heading level={3} className="text-center mb-4 text-lg">
+              <Heading
+                level={3}
+                className={`text-center mb-4 text-lg text-${theme === "dark" ? "white" : "black"}`}
+              >
                 📊 Final Standings
               </Heading>
 
@@ -94,7 +104,6 @@ export default function PostGameScreen({
                   .map((player, index) => {
                     const score = finalScores[player.id] || 0;
                     const isWinner = winner?.id === player.id;
-
                     return (
                       <motion.div
                         key={player.id}
@@ -104,12 +113,18 @@ export default function PostGameScreen({
                         className={`flex items-center justify-between p-3 rounded-lg ${
                           isWinner
                             ? "bg-yellow-500/20 border-2 border-yellow-500/40"
-                            : "bg-gray-100 dark:bg-gray-700"
+                            : `bg-gray-${theme === "dark" ? "700" : "100"}`
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className="text-xl font-bold w-8 text-center opacity-70">
-                            {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
+                            {index === 0
+                              ? "🥇"
+                              : index === 1
+                              ? "🥈"
+                              : index === 2
+                              ? "🥉"
+                              : `#${index + 1}`}
                           </div>
                           <div
                             className={`w-6 h-6 rounded-full ${
@@ -118,12 +133,18 @@ export default function PostGameScreen({
                                 : "bg-green-500"
                             }`}
                           />
-                          <Text className="font-medium">
+                          <Text
+                            className={`font-medium text-${theme === "dark" ? "white" : "black"}`}
+                          >
                             {player.name}
                             {player.id === currentPlayerId && " (You)"}
                           </Text>
                         </div>
-                        <Text className="font-bold text-lg">{score}</Text>
+                        <Text
+                          className={`font-bold text-lg text-${theme === "dark" ? "white" : "black"}`}
+                        >
+                          {score}
+                        </Text>
                       </motion.div>
                     );
                   })}
@@ -138,17 +159,16 @@ export default function PostGameScreen({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <Heading level={3} className="text-center mb-4 text-lg">
+              <Heading
+                level={3}
+                className={`text-center mb-4 text-lg text-${theme === "dark" ? "white" : "black"}`}
+              >
                 What's Next?
               </Heading>
 
               {!hasVoted ? (
                 <Stack gap={3}>
-                  <Button
-                    onClick={() => handleVote("playAgain")}
-                    size="lg"
-                    className="w-full py-4"
-                  >
+                  <Button onClick={() => handleVote("playAgain")} size="lg" className="w-full py-4">
                     🔄 Play Again
                   </Button>
                   <Button
@@ -161,7 +181,11 @@ export default function PostGameScreen({
                   </Button>
                 </Stack>
               ) : (
-                <div className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-6 text-center border-2 border-blue-500/40">
+                <div
+                  className={`rounded-xl p-6 text-center border-2 border-blue-500/40 bg-blue-500/${
+                    theme === "dark" ? "20" : "10"
+                  }`}
+                >
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -169,23 +193,32 @@ export default function PostGameScreen({
                   >
                     ✓
                   </motion.div>
-                  <Text className="font-bold mb-1">Vote Recorded!</Text>
-                  <Text className="text-sm opacity-70">
-                    You voted to {currentVote === "playAgain" ? "play again" : "return to menu"}
+                  <Text
+                    className={`font-bold mb-1 text-${theme === "dark" ? "white" : "black"}`}
+                  >
+                    Vote Recorded!
+                  </Text>
+                  <Text
+                    className={`text-sm opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+                  >
+                    You voted to{" "}
+                    {currentVote === "playAgain" ? "play again" : "return to menu"}
                   </Text>
                 </div>
               )}
             </motion.div>
           )}
 
-          {/* Vote Counter */}
+          {/* Voting Status */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4"
+            className={`rounded-xl p-4 bg-gray-${theme === "dark" ? "800" : "100"}`}
           >
-            <Text className="text-sm font-bold opacity-70 text-center mb-3">
+            <Text
+              className={`text-sm font-bold opacity-70 text-center mb-3 text-${theme === "dark" ? "white" : "black"}`}
+            >
               Voting Status
             </Text>
 
@@ -193,12 +226,16 @@ export default function PostGameScreen({
               {/* Play Again Votes */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Text className="text-sm">🔄 Play Again</Text>
-                  <Text className="text-sm font-bold">
+                  <Text className={`text-sm text-${theme === "dark" ? "white" : "black"}`}>
+                    🔄 Play Again
+                  </Text>
+                  <Text className={`text-sm font-bold text-${theme === "dark" ? "white" : "black"}`}>
                     {votes.playAgain.length}/{players.length}
                   </Text>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div
+                  className={`w-full rounded-full h-2 bg-gray-${theme === "dark" ? "700" : "200"}`}
+                >
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{
@@ -207,29 +244,21 @@ export default function PostGameScreen({
                     className="bg-blue-500 h-2 rounded-full"
                   />
                 </div>
-                {votes.playAgain.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {votes.playAgain.map((playerId) => (
-                      <span
-                        key={playerId}
-                        className="text-xs bg-blue-500/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded"
-                      >
-                        {getPlayerName(playerId)}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
 
               {/* Return to Menu Votes */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Text className="text-sm">🏠 Return to Menu</Text>
-                  <Text className="text-sm font-bold">
+                  <Text className={`text-sm text-${theme === "dark" ? "white" : "black"}`}>
+                    🏠 Return to Menu
+                  </Text>
+                  <Text className={`text-sm font-bold text-${theme === "dark" ? "white" : "black"}`}>
                     {votes.menu.length}/{players.length}
                   </Text>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div
+                  className={`w-full rounded-full h-2 bg-gray-${theme === "dark" ? "700" : "200"}`}
+                >
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{
@@ -238,42 +267,32 @@ export default function PostGameScreen({
                     className="bg-gray-500 h-2 rounded-full"
                   />
                 </div>
-                {votes.menu.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {votes.menu.map((playerId) => (
-                      <span
-                        key={playerId}
-                        className="text-xs bg-gray-500/20 text-gray-700 dark:text-gray-300 px-2 py-1 rounded"
-                      >
-                        {getPlayerName(playerId)}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
             </Stack>
 
             {totalVotes < players.length && (
-              <Text className="text-xs text-center mt-3 opacity-60">
+              <Text
+                className={`text-xs text-center mt-3 opacity-60 text-${theme === "dark" ? "white" : "black"}`}
+              >
                 All players must vote to continue
               </Text>
             )}
           </motion.div>
 
-          {/* Fun Stats (Optional) */}
+          {/* Fun Stats */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="bg-yellow-500/10 dark:bg-yellow-500/20 rounded-xl p-4"
+            className={`rounded-xl p-4 bg-yellow-500/${theme === "dark" ? "20" : "10"}`}
           >
-            <Text className="text-xs text-center">
+            <Text className={`text-xs text-center text-${theme === "dark" ? "white" : "black"}`}>
               💡 <strong>Thanks for playing!</strong> Want revenge? Vote to play
               again and show everyone your texting detective skills!
             </Text>
           </motion.div>
         </Stack>
       </motion.div>
-    </div>
+    </Container>
   );
 }

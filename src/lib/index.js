@@ -1,5 +1,3 @@
-export { default as ThemeProvider, useTheme } from "./context/ThemeProvider";
-
 // Core
 export { default as Container } from "./components/core/Container";
 export { default as Stack } from "./components/core/Stack";

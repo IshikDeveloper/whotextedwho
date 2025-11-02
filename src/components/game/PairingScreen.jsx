@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container, Stack, Text, Heading } from "../../lib";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function PairingScreen({ 
   playerCount,
@@ -9,6 +10,7 @@ export default function PairingScreen({
 }) {
   const [dots, setDots] = useState("");
   const [stage, setStage] = useState(0);
+  const { theme } = useTheme();
 
   // Animated dots effect
   useEffect(() => {
@@ -45,8 +47,8 @@ export default function PairingScreen({
   ];
 
   return (
-    <Container className="min-h-screen justify-center py-8">
-      <Stack gap={8} className="items-center text-center px-4 max-w-md">
+    <Container className={`min-h-screen min-w-screen justify-center py-8 bg-gray-${theme === "dark" ? "900" : "50"}`}>
+      <Stack gap={8} className={`items-center text-center text-${theme === "dark" ? "white" : "black"} px-4 max-w-md`}>
         {/* Main Animation */}
         <motion.div
           initial={{ scale: 0 }}
@@ -78,10 +80,10 @@ export default function PairingScreen({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Heading level={2} className="mb-2">
+          <Heading level={2} className={`mb-2 text-${theme === "dark" ? "white" : "black"}`}>
             {isSpectator ? "You're Spectating!" : "Pairing Players"}
           </Heading>
-          <Text className="text-sm opacity-70">
+          <Text className={`text-sm opacity-70 text-${theme === "dark" ? "white" : "black"}`}>
             {isSpectator 
               ? "Odd number of players - You'll watch and predict this round"
               : "You'll be matched anonymously with another player"
@@ -102,7 +104,7 @@ export default function PairingScreen({
                 className={`flex items-center gap-3 p-3 rounded-lg ${
                   index === stage
                     ? "bg-blue-500/20 border border-blue-500/40"
-                    : "bg-gray-100 dark:bg-gray-800"
+                    : `bg-gray-${theme === "dark" ? "800" : "100"}`
                 }`}
               >
                 {index < stage ? (
@@ -130,7 +132,7 @@ export default function PairingScreen({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 w-full"
+          className={`bg-gray-${theme === "dark" ? "800" : "100"} rounded-xl p-4 w-full`}
         >
           <Text className="text-xs opacity-70 text-center">
             {isSpectator 
@@ -147,7 +149,7 @@ export default function PairingScreen({
           transition={{ delay: 1 }}
           className="bg-yellow-500/10 dark:bg-yellow-500/20 rounded-xl p-4 w-full"
         >
-          <Text className="text-xs">
+          <Text className={`text-xs text-${theme === "dark" ? "white" : "black"}`}>
             <strong>💡 Pro Tip:</strong> {isSpectator 
               ? "Watch carefully! You can earn points by predicting who's texting in each pair."
               : "Pay attention to texting styles - spelling, punctuation, emojis... everything is a clue!"

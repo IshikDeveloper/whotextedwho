@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container, Stack, Text, Heading, Button, TextBubble } from "../../lib";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function PredictionScreen({
   messages = [],
@@ -15,6 +16,7 @@ export default function PredictionScreen({
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLocked, setIsLocked] = useState(hasSubmitted);
+  const { theme } = useTheme();
 
   // Filter out current player from selection
   const availablePlayers = players.filter((p) => p.id !== currentPlayerId);
@@ -38,18 +40,29 @@ export default function PredictionScreen({
   const selectedPlayer = availablePlayers.find((p) => p.id === selectedPlayerId);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-y-auto">
+    <Container
+      className={`min-h-screen overflow-y-auto bg-gray-${
+        theme === "dark" ? "900" : "50"
+      }`}
+    >
       {/* Header */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4 shadow-sm sticky top-0 z-10"
+        className={`border-b shadow-sm sticky top-0 z-10 px-4 py-4 bg-gray-${
+          theme === "dark" ? "800" : "white"
+        } border-gray-${theme === "dark" ? "700" : "200"}`}
       >
         <div className="max-w-4xl mx-auto">
-          <Heading level={2} className="text-center mb-1">
+          <Heading
+            level={2}
+            className={`text-center mb-1 text-${theme === "dark" ? "white" : "black"}`}
+          >
             🔮 Who Were You Texting?
           </Heading>
-          <Text className="text-sm text-center opacity-70">
+          <Text
+            className={`text-sm text-center opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+          >
             Review your conversation and make your guess
           </Text>
         </div>
@@ -61,17 +74,21 @@ export default function PredictionScreen({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-4"
+            className={`rounded-xl p-4 bg-blue-500/${
+              theme === "dark" ? "20" : "10"
+            }`}
           >
             <div className="flex items-center justify-between">
-              <Text className="text-sm">
+              <Text className={`text-sm text-${theme === "dark" ? "white" : "black"}`}>
                 <strong>Your Partner:</strong> {anonymousPartnerName}
               </Text>
               <div className="flex items-center gap-2">
                 {isLocked ? (
                   <span className="text-green-500 text-sm font-bold">✓ Submitted!</span>
                 ) : (
-                  <Text className="text-sm opacity-70">
+                  <Text
+                    className={`text-sm opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+                  >
                     {predictionsSubmitted}/{totalPlayers} players done
                   </Text>
                 )}
@@ -85,13 +102,22 @@ export default function PredictionScreen({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <Heading level={3} className="mb-3 text-lg">
+            <Heading
+              level={3}
+              className={`mb-3 text-lg text-${theme === "dark" ? "white" : "black"}`}
+            >
               📝 Conversation Recap
             </Heading>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700">
+            <div
+              className={`rounded-xl p-4 max-h-64 overflow-y-auto border bg-gray-${
+                theme === "dark" ? "800" : "white"
+              } border-gray-${theme === "dark" ? "700" : "200"}`}
+            >
               <Stack gap={2}>
                 {messages.length === 0 ? (
-                  <Text className="text-sm opacity-50 text-center py-4">
+                  <Text
+                    className={`text-sm opacity-50 text-center py-4 text-${theme === "dark" ? "white" : "black"}`}
+                  >
                     No messages were sent
                   </Text>
                 ) : (
@@ -124,19 +150,34 @@ export default function PredictionScreen({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Heading level={3} className="mb-3 text-lg">
+            <Heading
+              level={3}
+              className={`mb-3 text-lg text-${theme === "dark" ? "white" : "black"}`}
+            >
               👥 Select a Player
             </Heading>
 
             {isLocked ? (
-              <div className="bg-green-500/10 border border-green-500/40 rounded-xl p-6 text-center">
+              <div
+                className={`rounded-xl p-6 text-center border border-green-500/40 bg-green-500/${
+                  theme === "dark" ? "20" : "10"
+                }`}
+              >
                 <div className="text-4xl mb-2">✓</div>
-                <Text className="font-bold mb-1">Prediction Locked In!</Text>
-                <Text className="text-sm opacity-70">
+                <Text
+                  className={`font-bold mb-1 text-${theme === "dark" ? "white" : "black"}`}
+                >
+                  Prediction Locked In!
+                </Text>
+                <Text
+                  className={`text-sm opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+                >
                   You guessed: <strong>{selectedPlayer?.name}</strong>
                 </Text>
                 <div className="mt-4">
-                  <Text className="text-xs opacity-60">
+                  <Text
+                    className={`text-xs opacity-60 text-${theme === "dark" ? "white" : "black"}`}
+                  >
                     Waiting for other players... ({predictionsSubmitted}/{totalPlayers})
                   </Text>
                 </div>
@@ -155,11 +196,12 @@ export default function PredictionScreen({
                     className={`p-4 rounded-xl border-2 transition ${
                       selectedPlayerId === player.id
                         ? "border-blue-500 bg-blue-500/20 dark:bg-blue-500/30"
-                        : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-blue-400"
+                        : `border-gray-${theme === "dark" ? "600" : "300"} bg-gray-${
+                            theme === "dark" ? "800" : "white"
+                          } hover:border-blue-400`
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      {/* Bubble Color */}
                       <div
                         className={`w-8 h-8 rounded-full flex-shrink-0 ${
                           player.bubbleColor === "blue"
@@ -168,7 +210,11 @@ export default function PredictionScreen({
                         }`}
                       />
                       <div className="text-left flex-1">
-                        <Text className="text-sm font-bold">{player.name}</Text>
+                        <Text
+                          className={`text-sm font-bold text-${theme === "dark" ? "white" : "black"}`}
+                        >
+                          {player.name}
+                        </Text>
                         {selectedPlayerId === player.id && (
                           <motion.div
                             initial={{ opacity: 0 }}
@@ -211,7 +257,9 @@ export default function PredictionScreen({
                   animate={{ opacity: 1 }}
                   className="mt-3"
                 >
-                  <Text className="text-xs text-center opacity-70">
+                  <Text
+                    className={`text-xs text-center opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+                  >
                     ⚠️ You can't change your answer after submitting!
                   </Text>
                 </motion.div>
@@ -225,9 +273,13 @@ export default function PredictionScreen({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="bg-yellow-500/10 dark:bg-yellow-500/20 rounded-xl p-4"
+              className={`rounded-xl p-4 bg-yellow-500/${
+                theme === "dark" ? "20" : "10"
+              }`}
             >
-              <Text className="text-xs">
+              <Text
+                className={`text-xs text-${theme === "dark" ? "white" : "black"}`}
+              >
                 <strong>💡 Look for clues:</strong> Typing style, emoji usage,
                 punctuation, slang, response timing...
               </Text>
@@ -256,13 +308,26 @@ export default function PredictionScreen({
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="fixed inset-0 flex items-center justify-center z-50 p-4"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-                <Heading level={3} className="mb-4 text-center">
+              <div
+                className={`rounded-2xl p-6 max-w-md w-full shadow-2xl bg-gray-${
+                  theme === "dark" ? "800" : "white"
+                }`}
+              >
+                <Heading
+                  level={3}
+                  className={`mb-4 text-center text-${theme === "dark" ? "white" : "black"}`}
+                >
                   Confirm Your Guess?
                 </Heading>
 
-                <div className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-4 mb-6">
-                  <Text className="text-center mb-2">
+                <div
+                  className={`rounded-xl p-4 mb-6 bg-blue-500/${
+                    theme === "dark" ? "20" : "10"
+                  }`}
+                >
+                  <Text
+                    className={`text-center mb-2 text-${theme === "dark" ? "white" : "black"}`}
+                  >
                     You think <strong>{anonymousPartnerName}</strong> is:
                   </Text>
                   <div className="flex items-center justify-center gap-3 mt-3">
@@ -273,22 +338,24 @@ export default function PredictionScreen({
                           : "bg-green-500"
                       }`}
                     />
-                    <Heading level={3}>{selectedPlayer?.name}</Heading>
+                    <Heading
+                      level={3}
+                      className={`text-${theme === "dark" ? "white" : "black"}`}
+                    >
+                      {selectedPlayer?.name}
+                    </Heading>
                   </div>
                 </div>
 
-                <Text className="text-xs text-center mb-6 opacity-70">
+                <Text
+                  className={`text-xs text-center mb-6 opacity-70 text-${theme === "dark" ? "white" : "black"}`}
+                >
                   This will be your final answer. You'll earn{" "}
-                  <strong className="text-green-500">+10 points</strong> if
-                  correct!
+                  <strong className="text-green-500">+10 points</strong> if correct!
                 </Text>
 
                 <div className="flex gap-3">
-                  <Button
-                    onClick={() => setShowConfirm(false)}
-                    variant="ghost"
-                    className="flex-1"
-                  >
+                  <Button onClick={() => setShowConfirm(false)} variant="ghost" className="flex-1">
                     Go Back
                   </Button>
                   <Button onClick={handleSubmit} className="flex-1">
@@ -300,6 +367,6 @@ export default function PredictionScreen({
           </>
         )}
       </AnimatePresence>
-    </div>
+    </Container>
   );
 }

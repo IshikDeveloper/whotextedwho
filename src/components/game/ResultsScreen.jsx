@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stack, Text, Heading, Button } from "../../lib";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function ResultsScreen({
   pairs = [],
@@ -12,6 +13,7 @@ export default function ResultsScreen({
   const [revealStage, setRevealStage] = useState(0);
   const [scores, setScores] = useState({});
   const [showConfetti, setShowConfetti] = useState(false);
+  const { theme } = useTheme();
 
   // Calculate all scores
   useEffect(() => {
@@ -121,14 +123,14 @@ export default function ResultsScreen({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-500/10 to-blue-500/10 dark:from-purple-900/20 dark:to-blue-900/20 overflow-y-auto">
+    <div className={`${theme === "dark" ? "bg-gradient-to-b from-purple-900/20 to-blue-900/20" : "bg-gradient-to-b from-purple-500/10 to-blue-500/10"} overflow-y-auto min-h-screen`}>
       {/* Header */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-6 shadow-sm sticky top-0 z-10"
+        className={`${theme === "dark" ? "bg-gray-800/80 border-gray-700" : "bg-white/80 border-gray-200"} backdrop-blur-sm border-b px-4 py-6 shadow-sm sticky top-0 z-10`}
       >
-        <div className="max-w-4xl mx-auto text-center">
+        <div className={`max-w-4xl mx-auto text-center ${theme === "dark" ? "text-white" : "text-black"}`}>
           <motion.div
             animate={{
               scale: showConfetti ? [1, 1.1, 1] : 1,
@@ -139,7 +141,7 @@ export default function ResultsScreen({
               🎉 Results Are In! 🎉
             </Heading>
           </motion.div>
-          <Text className="text-sm opacity-70">
+          <Text className={`${theme === "dark" ? "text-white" : "text-black"} text-sm opacity-70`}>
             Let's see who figured it out...
           </Text>
         </div>
@@ -149,7 +151,7 @@ export default function ResultsScreen({
         <Stack gap={6}>
           {/* Pair Reveals */}
           <div>
-            <Heading level={2} className="mb-4 text-center">
+            <Heading level={2} className={`mb-4 text-center ${theme === "dark" ? "text-white" : "text-black"}`}>
               🔓 Identity Reveals
             </Heading>
 
@@ -165,9 +167,9 @@ export default function ResultsScreen({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.3 }}
-                    className="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700"
+                    className={`${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} rounded-xl p-6 border-2`}
                   >
-                    <Text className="text-sm opacity-70 text-center mb-4">
+                    <Text className={`text-sm opacity-70 text-center mb-4 ${theme === "dark" ? "text-white" : "text-black"}`}>
                       Pair {index + 1}
                     </Text>
 
@@ -180,7 +182,7 @@ export default function ResultsScreen({
                             initial={{ rotateY: 0 }}
                             exit={{ rotateY: 90 }}
                             transition={{ duration: 0.3 }}
-                            className="text-center"
+                            className={`${theme === "dark" ? "text-white" : "text-black"} text-center`}
                           >
                             <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-2xl mb-2">
                               ❓
@@ -272,7 +274,7 @@ export default function ResultsScreen({
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         transition={{ delay: 0.3 }}
-                        className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+                        className={`mt-4 pt-4 border-t ${theme === "dark" ? "border-gray-700" : "border-gray-200"}`}
                       >
                         <Text className="text-xs text-center opacity-70 mb-2">
                           Who guessed correctly?
@@ -291,8 +293,8 @@ export default function ResultsScreen({
                                 key={playerId}
                                 className={`px-3 py-1 rounded-full text-xs ${
                                   isCorrect
-                                    ? "bg-green-500/20 text-green-700 dark:text-green-300"
-                                    : "bg-red-500/20 text-red-700 dark:text-red-300"
+                                    ? `${theme === "dark" ? "bg-green-500/20 text-green-300" : "bg-green-500/20 text-green-700"}`
+                                    : `${theme === "dark" ? "bg-red-500/20 text-red-300" : "bg-red-500/20 text-red-700"}`
                                 }`}
                               >
                                 {getPlayerName(playerId)}: {isCorrect ? "✓" : "✗"}
@@ -320,9 +322,9 @@ export default function ResultsScreen({
                   📊 Score Breakdown
                 </Heading>
 
-                <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                <div className={`${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} rounded-xl overflow-hidden border-2`}>
                   {/* Header */}
-                  <div className="bg-gray-100 dark:bg-gray-700 px-4 py-3 grid grid-cols-5 gap-2 text-xs font-bold">
+                  <div className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} px-4 py-3 grid grid-cols-5 gap-2 text-xs font-bold`}>
                     <div>Player</div>
                     <div className="text-center">Partner</div>
                     <div className="text-center">Spectator</div>
@@ -343,9 +345,9 @@ export default function ResultsScreen({
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.7 + index * 0.1 }}
-                          className={`px-4 py-3 grid grid-cols-5 gap-2 text-sm border-t border-gray-200 dark:border-gray-700 ${
+                          className={`px-4 py-3 grid grid-cols-5 gap-2 text-sm ${theme === "dark" ? "border-gray-700" : "border-gray-200"} border-t ${
                             isWinner
-                              ? "bg-yellow-500/20 dark:bg-yellow-500/30"
+                              ? `${theme === "dark" ? "bg-yellow-500/30" : "bg-yellow-500/20"}`
                               : ""
                           }`}
                         >
@@ -364,7 +366,7 @@ export default function ResultsScreen({
                           </div>
                           <div className="text-center">
                             {score.partnerGuess > 0 ? (
-                              <span className="text-green-500 font-bold">
+                              <span className={`${theme === "dark" ? "text-green-400" : "text-green-500"} font-bold`}>
                                 +{score.partnerGuess}
                               </span>
                             ) : (
@@ -373,7 +375,7 @@ export default function ResultsScreen({
                           </div>
                           <div className="text-center">
                             {score.spectatorCorrect > 0 ? (
-                              <span className="text-blue-500 font-bold">
+                              <span className={`${theme === "dark" ? "text-blue-400" : "text-blue-500"} font-bold`}>
                                 +{score.spectatorCorrect}
                               </span>
                             ) : (
@@ -382,7 +384,7 @@ export default function ResultsScreen({
                           </div>
                           <div className="text-center">
                             {score.confusionBonus > 0 ? (
-                              <span className="text-purple-500 font-bold">
+                              <span className={`${theme === "dark" ? "text-purple-400" : "text-purple-500"} font-bold`}>
                                 +{score.confusionBonus}
                               </span>
                             ) : (
@@ -414,7 +416,7 @@ export default function ResultsScreen({
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ type: "spring", duration: 0.6 }}
-                className="bg-gradient-to-r from-yellow-400 to-orange-400 dark:from-yellow-600 dark:to-orange-600 rounded-2xl p-8 text-center"
+                className={`${theme === "dark" ? "bg-gradient-to-r from-yellow-600 to-orange-600" : "bg-gradient-to-r from-yellow-400 to-orange-400"} rounded-2xl p-8 text-center`}
               >
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
@@ -472,7 +474,7 @@ export default function ResultsScreen({
                 delay: Math.random() * 0.5,
                 ease: "linear",
               }}
-              className="absolute text-2xl"
+              className={`absolute text-2xl`}
             >
               {["🎉", "🎊", "⭐", "✨", "🏆"][Math.floor(Math.random() * 5)]}
             </motion.div>

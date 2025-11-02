@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stack, Text, Heading, Button, TextBubble } from "../../lib";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export default function SpectatorMode({
   pairs = [],
@@ -12,9 +13,7 @@ export default function SpectatorMode({
   const [selectedPairIndex, setSelectedPairIndex] = useState(0);
   const [guesses, setGuesses] = useState({}); // { pairId: { player1Id, player2Id } }
   const [showConfirm, setShowConfirm] = useState(false);
-
-  const currentPair = pairs[selectedPairIndex];
-  const hasGuessedCurrentPair = guesses[currentPair?.id];
+  const { theme } = useTheme();
 
   // Get available players (exclude current user and already guessed)
   const getAvailablePlayersForSlot = (slotNumber) => {
@@ -75,19 +74,19 @@ export default function SpectatorMode({
 
   if (!currentPair) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className={`${theme === "dark" ? "bg-gray-900" : "bg-gray-50"} min-h-screen flex items-center justify-center p-4`}>
         <Text>No pairs to spectate</Text>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-y-auto">
+    <div className={`${theme === "dark" ? "bg-gray-900" : "bg-gray-50"} min-h-screen overflow-y-auto`}>
       {/* Header */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4 shadow-sm sticky top-0 z-10"
+        className={`${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} border-b px-4 py-4 shadow-sm sticky top-0 z-10`}
       >
         <div className="max-w-4xl mx-auto">
           <Heading level={2} className="text-center mb-1">
@@ -105,7 +104,7 @@ export default function SpectatorMode({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-4"
+            className={`${theme === "dark" ? "bg-blue-500/20" : "bg-blue-500/10"} rounded-xl p-4`}
           >
             <div className="flex items-center justify-between mb-2">
               <Text className="text-sm">
@@ -116,7 +115,7 @@ export default function SpectatorMode({
               </Text>
             </div>
             {/* Progress bar */}
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className={`w-full ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"} rounded-full h-2`}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={{
@@ -152,7 +151,7 @@ export default function SpectatorMode({
               )}
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 max-h-80 overflow-y-auto border border-gray-200 dark:border-gray-700">
+            <div className={`${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} rounded-xl p-4 max-h-80 overflow-y-auto border`}>
               <Stack gap={2}>
                 {currentPair.messages.length === 0 ? (
                   <Text className="text-sm opacity-50 text-center py-4">
@@ -194,7 +193,7 @@ export default function SpectatorMode({
 
             <div className="grid md:grid-cols-2 gap-4">
               {/* Player 1 (Blue bubbles) */}
-              <div className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-4 border border-blue-500/40">
+              <div className={`${theme === "dark" ? "bg-blue-500/20 border-blue-500/40" : "bg-blue-500/10 border-blue-500/40"} rounded-xl p-4 border`}>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 bg-blue-500 rounded-full" />
                   <Text className="text-sm font-bold">Blue Bubbles</Text>
@@ -213,7 +212,7 @@ export default function SpectatorMode({
                         className={`p-3 rounded-lg border-2 transition text-left ${
                           isSelected
                             ? "border-blue-500 bg-blue-500/20"
-                            : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-blue-400"
+                            : `${theme === "dark" ? "border-gray-600 bg-gray-800 hover:border-blue-400" : "border-gray-300 bg-white hover:border-blue-400"}`
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -240,7 +239,7 @@ export default function SpectatorMode({
               </div>
 
               {/* Player 2 (Green bubbles) */}
-              <div className="bg-green-500/10 dark:bg-green-500/20 rounded-xl p-4 border border-green-500/40">
+              <div className={`${theme === "dark" ? "bg-green-500/20 border-green-500/40" : "bg-green-500/10 border-green-500/40"} rounded-xl p-4 border`}>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 bg-green-500 rounded-full" />
                   <Text className="text-sm font-bold">Green Bubbles</Text>
@@ -259,7 +258,7 @@ export default function SpectatorMode({
                         className={`p-3 rounded-lg border-2 transition text-left ${
                           isSelected
                             ? "border-green-500 bg-green-500/20"
-                            : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-green-400"
+                            : `${theme === "dark" ? "border-gray-600 bg-gray-800 hover:border-green-400" : "border-gray-300 bg-white hover:border-green-400"}`
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -322,7 +321,7 @@ export default function SpectatorMode({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="bg-yellow-500/10 dark:bg-yellow-500/20 rounded-xl p-4"
+            className={`${theme === "dark" ? "bg-yellow-500/20" : "bg-yellow-500/10"} rounded-xl p-4`}
           >
             <Text className="text-xs">
               <strong>💡 Strategy:</strong> You must predict BOTH players
@@ -351,12 +350,12 @@ export default function SpectatorMode({
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="fixed inset-0 flex items-center justify-center z-50 p-4"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+              <div className={`${theme === "dark" ? "bg-gray-800" : "bg-white"} rounded-2xl p-6 max-w-md w-full shadow-2xl`}>
                 <Heading level={3} className="mb-4 text-center">
                   Submit Predictions?
                 </Heading>
 
-                <div className="bg-blue-500/10 dark:bg-blue-500/20 rounded-xl p-4 mb-4">
+                <div className={`${theme === "dark" ? "bg-blue-500/20" : "bg-blue-500/10"} rounded-xl p-4 mb-4`}>
                   <Text className="text-center mb-2 text-sm">
                     You've predicted all {pairs.length} pairs!
                   </Text>
