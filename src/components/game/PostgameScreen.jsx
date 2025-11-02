@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Stack, Text, Heading, Button, Container } from "../../lib";
 import { useTheme } from "../../contexts/ThemeContext";
+import { getBubbleAvatarStyle, getBubbleEmoji } from "../../utils/bubbleColors";
 
 export default function PostGameScreen({
   players = [],
@@ -42,9 +43,8 @@ export default function PostGameScreen({
 
   return (
     <Container
-      className={`min-h-screen flex items-center justify-center p-4 bg-gray-${
-        theme === "dark" ? "900" : "50"
-      }`}
+      className={`min-h-screen flex items-center justify-center p-4 bg-gray-${theme === "dark" ? "900" : "50"
+        }`}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -69,8 +69,8 @@ export default function PostGameScreen({
               {allVotedPlayAgain
                 ? "Starting New Game..."
                 : allVotedMenu
-                ? "Returning to Menu..."
-                : "Game Over!"}
+                  ? "Returning to Menu..."
+                  : "Game Over!"}
             </Heading>
 
             <Text
@@ -87,9 +87,8 @@ export default function PostGameScreen({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className={`rounded-xl p-4 border-2 border-gray-${
-                theme === "dark" ? "700" : "200"
-              } bg-gray-${theme === "dark" ? "800" : "white"}`}
+              className={`rounded-xl p-4 border-2 border-gray-${theme === "dark" ? "700" : "200"
+                } bg-gray-${theme === "dark" ? "800" : "white"}`}
             >
               <Heading
                 level={3}
@@ -110,29 +109,30 @@ export default function PostGameScreen({
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 + index * 0.1 }}
-                        className={`flex items-center justify-between p-3 rounded-lg ${
-                          isWinner
+                        className={`flex items-center justify-between p-3 rounded-lg ${isWinner
                             ? "bg-yellow-500/20 border-2 border-yellow-500/40"
                             : `bg-gray-${theme === "dark" ? "700" : "100"}`
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className="text-xl font-bold w-8 text-center opacity-70">
                             {index === 0
                               ? "🥇"
                               : index === 1
-                              ? "🥈"
-                              : index === 2
-                              ? "🥉"
-                              : `#${index + 1}`}
+                                ? "🥈"
+                                : index === 2
+                                  ? "🥉"
+                                  : `#${index + 1}`}
                           </div>
                           <div
-                            className={`w-6 h-6 rounded-full ${
-                              player.bubbleColor === "blue"
-                                ? "bg-blue-500"
-                                : "bg-green-500"
-                            }`}
-                          />
+                            className={`w-6 h-6 rounded-full relative ${getBubbleAvatarStyle(player.bubbleColor)}`}
+                          >
+                            {getBubbleEmoji(player.bubbleColor) && (
+                              <div className="absolute inset-0 flex items-center justify-center text-[8px]">
+                                {getBubbleEmoji(player.bubbleColor)}
+                              </div>
+                            )}
+                          </div>
                           <Text
                             className={`font-medium text-${theme === "dark" ? "white" : "black"}`}
                           >
@@ -182,9 +182,8 @@ export default function PostGameScreen({
                 </Stack>
               ) : (
                 <div
-                  className={`rounded-xl p-6 text-center border-2 border-blue-500/40 bg-blue-500/${
-                    theme === "dark" ? "20" : "10"
-                  }`}
+                  className={`rounded-xl p-6 text-center border-2 border-blue-500/40 bg-blue-500/${theme === "dark" ? "20" : "10"
+                    }`}
                 >
                   <motion.div
                     initial={{ scale: 0 }}

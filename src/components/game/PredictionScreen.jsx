@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container, Stack, Text, Heading, Button, TextBubble } from "../../lib";
 import { useTheme } from "../../contexts/ThemeContext";
+import { getBubbleAvatarStyle, getBubbleEmoji } from "../../utils/bubbleColors";
 
 export default function PredictionScreen({
   messages = [],
@@ -41,17 +42,15 @@ export default function PredictionScreen({
 
   return (
     <Container
-      className={`min-h-screen overflow-y-auto bg-gray-${
-        theme === "dark" ? "900" : "50"
-      }`}
+      className={`min-h-screen overflow-y-auto bg-gray-${theme === "dark" ? "900" : "50"
+        }`}
     >
       {/* Header */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className={`border-b shadow-sm sticky top-0 z-10 px-4 py-4 bg-gray-${
-          theme === "dark" ? "800" : "white"
-        } border-gray-${theme === "dark" ? "700" : "200"}`}
+        className={`border-b shadow-sm sticky top-0 z-10 px-4 py-4 bg-gray-${theme === "dark" ? "800" : "white"
+          } border-gray-${theme === "dark" ? "700" : "200"}`}
       >
         <div className="max-w-4xl mx-auto">
           <Heading
@@ -74,9 +73,8 @@ export default function PredictionScreen({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`rounded-xl p-4 bg-blue-500/${
-              theme === "dark" ? "20" : "10"
-            }`}
+            className={`rounded-xl p-4 bg-blue-500/${theme === "dark" ? "20" : "10"
+              }`}
           >
             <div className="flex items-center justify-between">
               <Text className={`text-sm text-${theme === "dark" ? "white" : "black"}`}>
@@ -109,9 +107,8 @@ export default function PredictionScreen({
               📝 Conversation Recap
             </Heading>
             <div
-              className={`rounded-xl p-4 max-h-64 overflow-y-auto border bg-gray-${
-                theme === "dark" ? "800" : "white"
-              } border-gray-${theme === "dark" ? "700" : "200"}`}
+              className={`rounded-xl p-4 max-h-64 overflow-y-auto border bg-gray-${theme === "dark" ? "800" : "white"
+                } border-gray-${theme === "dark" ? "700" : "200"}`}
             >
               <Stack gap={2}>
                 {messages.length === 0 ? (
@@ -159,9 +156,8 @@ export default function PredictionScreen({
 
             {isLocked ? (
               <div
-                className={`rounded-xl p-6 text-center border border-green-500/40 bg-green-500/${
-                  theme === "dark" ? "20" : "10"
-                }`}
+                className={`rounded-xl p-6 text-center border border-green-500/40 bg-green-500/${theme === "dark" ? "20" : "10"
+                  }`}
               >
                 <div className="text-4xl mb-2">✓</div>
                 <Text
@@ -193,22 +189,22 @@ export default function PredictionScreen({
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleSelectPlayer(player.id)}
-                    className={`p-4 rounded-xl border-2 transition ${
-                      selectedPlayerId === player.id
-                        ? "border-blue-500 bg-blue-500/20 dark:bg-blue-500/30"
-                        : `border-gray-${theme === "dark" ? "600" : "300"} bg-gray-${
-                            theme === "dark" ? "800" : "white"
-                          } hover:border-blue-400`
-                    }`}
+                    className={`p-4 rounded-xl border-2 transition ${selectedPlayerId === player.id
+                      ? "border-blue-500 bg-blue-500/20 dark:bg-blue-500/30"
+                      : `border-gray-${theme === "dark" ? "600" : "300"} bg-gray-${theme === "dark" ? "800" : "white"
+                      } hover:border-blue-400`
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-8 h-8 rounded-full flex-shrink-0 ${
-                          player.bubbleColor === "blue"
-                            ? "bg-blue-500"
-                            : "bg-green-500"
-                        }`}
-                      />
+                        className={`w-8 h-8 rounded-full flex-shrink-0 relative ${getBubbleAvatarStyle(player.bubbleColor)}`}
+                      >
+                        {getBubbleEmoji(player.bubbleColor) && (
+                          <div className="absolute inset-0 flex items-center justify-center text-xs">
+                            {getBubbleEmoji(player.bubbleColor)}
+                          </div>
+                        )}
+                      </div>
                       <div className="text-left flex-1">
                         <Text
                           className={`text-sm font-bold text-${theme === "dark" ? "white" : "black"}`}
@@ -273,9 +269,8 @@ export default function PredictionScreen({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className={`rounded-xl p-4 bg-yellow-500/${
-                theme === "dark" ? "20" : "10"
-              }`}
+              className={`rounded-xl p-4 bg-yellow-500/${theme === "dark" ? "20" : "10"
+                }`}
             >
               <Text
                 className={`text-xs text-${theme === "dark" ? "white" : "black"}`}
@@ -309,9 +304,8 @@ export default function PredictionScreen({
               className="fixed inset-0 flex items-center justify-center z-50 p-4"
             >
               <div
-                className={`rounded-2xl p-6 max-w-md w-full shadow-2xl bg-gray-${
-                  theme === "dark" ? "800" : "white"
-                }`}
+                className={`rounded-2xl p-6 max-w-md w-full shadow-2xl bg-gray-${theme === "dark" ? "800" : "white"
+                  }`}
               >
                 <Heading
                   level={3}
@@ -321,9 +315,8 @@ export default function PredictionScreen({
                 </Heading>
 
                 <div
-                  className={`rounded-xl p-4 mb-6 bg-blue-500/${
-                    theme === "dark" ? "20" : "10"
-                  }`}
+                  className={`rounded-xl p-4 mb-6 bg-blue-500/${theme === "dark" ? "20" : "10"
+                    }`}
                 >
                   <Text
                     className={`text-center mb-2 text-${theme === "dark" ? "white" : "black"}`}
@@ -332,12 +325,14 @@ export default function PredictionScreen({
                   </Text>
                   <div className="flex items-center justify-center gap-3 mt-3">
                     <div
-                      className={`w-10 h-10 rounded-full ${
-                        selectedPlayer?.bubbleColor === "blue"
-                          ? "bg-blue-500"
-                          : "bg-green-500"
-                      }`}
-                    />
+                      className={`w-10 h-10 rounded-full relative ${getBubbleAvatarStyle(selectedPlayer?.bubbleColor)}`}
+                    >
+                      {getBubbleEmoji(selectedPlayer?.bubbleColor) && (
+                        <div className="absolute inset-0 flex items-center justify-center text-lg">
+                          {getBubbleEmoji(selectedPlayer?.bubbleColor)}
+                        </div>
+                      )}
+                    </div>
                     <Heading
                       level={3}
                       className={`text-${theme === "dark" ? "white" : "black"}`}

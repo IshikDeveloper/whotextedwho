@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stack, Text, Heading, Button, TextBubble } from "../../lib";
 import { useTheme } from "../../contexts/ThemeContext";
+import { getBubbleAvatarStyle, getBubbleEmoji } from "../../utils/bubbleColors";
 
 export default function SpectatorMode({
   pairs = [],
@@ -209,21 +210,22 @@ export default function SpectatorMode({
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleSelectPlayer(1, player.id)}
-                        className={`p-3 rounded-lg border-2 transition text-left ${
-                          isSelected
+                        className={`p-3 rounded-lg border-2 transition text-left ${isSelected
                             ? "border-blue-500 bg-blue-500/20"
                             : `${theme === "dark" ? "border-gray-600 bg-gray-800 hover:border-blue-400" : "border-gray-300 bg-white hover:border-blue-400"}`
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-5 h-5 rounded-full ${
-                                player.bubbleColor === "blue"
-                                  ? "bg-blue-500"
-                                  : "bg-green-500"
-                              }`}
-                            />
+                              className={`w-5 h-5 rounded-full relative ${getBubbleAvatarStyle(player.bubbleColor)}`}
+                            >
+                              {getBubbleEmoji(player.bubbleColor) && (
+                                <div className="absolute inset-0 flex items-center justify-center text-[6px]">
+                                  {getBubbleEmoji(player.bubbleColor)}
+                                </div>
+                              )}
+                            </div>
                             <Text className="text-sm font-medium">
                               {player.name}
                             </Text>
@@ -255,20 +257,18 @@ export default function SpectatorMode({
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleSelectPlayer(2, player.id)}
-                        className={`p-3 rounded-lg border-2 transition text-left ${
-                          isSelected
+                        className={`p-3 rounded-lg border-2 transition text-left ${isSelected
                             ? "border-green-500 bg-green-500/20"
                             : `${theme === "dark" ? "border-gray-600 bg-gray-800 hover:border-green-400" : "border-gray-300 bg-white hover:border-green-400"}`
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-5 h-5 rounded-full ${
-                                player.bubbleColor === "blue"
+                              className={`w-5 h-5 rounded-full ${player.bubbleColor === "blue"
                                   ? "bg-blue-500"
                                   : "bg-green-500"
-                              }`}
+                                }`}
                             />
                             <Text className="text-sm font-medium">
                               {player.name}

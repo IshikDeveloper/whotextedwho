@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stack, Text, Heading, Button } from "../../lib";
 import { useTheme } from "../../contexts/ThemeContext";
+import { getBubbleAvatarStyle, getBubbleEmoji } from "../../utils/bubbleColors";
 
 export default function ResultsScreen({
   pairs = [],
@@ -18,7 +19,7 @@ export default function ResultsScreen({
   // Calculate all scores
   useEffect(() => {
     const newScores = {};
-    
+
     // Initialize all player scores
     players.forEach((player) => {
       newScores[player.id] = {
@@ -34,13 +35,13 @@ export default function ResultsScreen({
       const playerPair = pairs.find(
         (pair) => pair.player1Id === playerId || pair.player2Id === playerId
       );
-      
+
       if (playerPair) {
         const actualPartnerId =
           playerPair.player1Id === playerId
             ? playerPair.player2Id
             : playerPair.player1Id;
-        
+
         if (guessedId === actualPartnerId) {
           newScores[playerId].partnerGuess = 10;
         }
@@ -50,7 +51,7 @@ export default function ResultsScreen({
     // Score spectator guesses (+5 per correct pair)
     Object.entries(spectatorGuesses).forEach(([playerId, pairGuesses]) => {
       let correctPairs = 0;
-      
+
       Object.entries(pairGuesses).forEach(([pairId, guess]) => {
         const pair = pairs.find((p) => p.id === pairId);
         if (
@@ -61,7 +62,7 @@ export default function ResultsScreen({
           correctPairs++;
         }
       });
-      
+
       newScores[playerId].spectatorCorrect = correctPairs * 5;
     });
 
@@ -70,13 +71,13 @@ export default function ResultsScreen({
       const guesserPair = pairs.find(
         (pair) => pair.player1Id === guesserId || pair.player2Id === guesserId
       );
-      
+
       if (guesserPair) {
         const actualPartnerId =
           guesserPair.player1Id === guesserId
             ? guesserPair.player2Id
             : guesserPair.player1Id;
-        
+
         // If wrong guess, give confusion bonus to the guessed person
         if (guessedId !== actualPartnerId && newScores[guessedId]) {
           newScores[guessedId].confusionBonus += 2;
@@ -200,13 +201,15 @@ export default function ResultsScreen({
                             className="text-center"
                           >
                             <div
-                              className={`w-16 h-16 ${
-                                player1?.bubbleColor === "blue"
-                                  ? "bg-blue-500"
-                                  : "bg-green-500"
-                              } rounded-full flex items-center justify-center text-2xl mb-2`}
+                              className={`w-16 h-16 ${getBubbleAvatarStyle(player1?.bubbleColor)} rounded-full flex items-center justify-center text-2xl mb-2 relative`}
                             >
-                              👤
+                              {getBubbleEmoji(player1?.bubbleColor) ? (
+                                <div className="absolute inset-0 flex items-center justify-center text-3xl">
+                                  {getBubbleEmoji(player1?.bubbleColor)}
+                                </div>
+                              ) : (
+                                <span>👤</span>
+                              )}
                             </div>
                             <Text className="text-sm font-bold">
                               {player1?.name}
@@ -252,13 +255,15 @@ export default function ResultsScreen({
                             className="text-center"
                           >
                             <div
-                              className={`w-16 h-16 ${
-                                player2?.bubbleColor === "blue"
-                                  ? "bg-blue-500"
-                                  : "bg-green-500"
-                              } rounded-full flex items-center justify-center text-2xl mb-2`}
+                              className={`w-16 h-16 ${getBubbleAvatarStyle(player2?.bubbleColor)} rounded-full flex items-center justify-center text-2xl mb-2 relative`}
                             >
-                              👤
+                              {getBubbleEmoji(player2?.bubbleColor) ? (
+                                <div className="absolute inset-0 flex items-center justify-center text-3xl">
+                                  {getBubbleEmoji(player2?.bubbleColor)}
+                                </div>
+                              ) : (
+                                <span>👤</span>
+                              )}
                             </div>
                             <Text className="text-sm font-bold">
                               {player2?.name}
@@ -291,11 +296,10 @@ export default function ResultsScreen({
                             return (
                               <div
                                 key={playerId}
-                                className={`px-3 py-1 rounded-full text-xs ${
-                                  isCorrect
-                                    ? `${theme === "dark" ? "bg-green-500/20 text-green-300" : "bg-green-500/20 text-green-700"}`
-                                    : `${theme === "dark" ? "bg-red-500/20 text-red-300" : "bg-red-500/20 text-red-700"}`
-                                }`}
+                                className={`px-3 py-1 rounded-full text-xs ${isCorrect
+                                  ? `${theme === "dark" ? "bg-green-500/20 text-green-300" : "bg-green-500/20 text-green-700"}`
+                                  : `${theme === "dark" ? "bg-red-500/20 text-red-300" : "bg-red-500/20 text-red-700"}`
+                                  }`}
                               >
                                 {getPlayerName(playerId)}: {isCorrect ? "✓" : "✗"}
                               </div>
@@ -345,20 +349,21 @@ export default function ResultsScreen({
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.7 + index * 0.1 }}
-                          className={`px-4 py-3 grid grid-cols-5 gap-2 text-sm ${theme === "dark" ? "border-gray-700" : "border-gray-200"} border-t ${
-                            isWinner
-                              ? `${theme === "dark" ? "bg-yellow-500/30" : "bg-yellow-500/20"}`
-                              : ""
-                          }`}
+                          className={`px-4 py-3 grid grid-cols-5 gap-2 text-sm ${theme === "dark" ? "border-gray-700" : "border-gray-200"} border-t ${isWinner
+                            ? `${theme === "dark" ? "bg-yellow-500/30" : "bg-yellow-500/20"}`
+                            : ""
+                            }`}
                         >
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-4 h-4 rounded-full ${
-                                player.bubbleColor === "blue"
-                                  ? "bg-blue-500"
-                                  : "bg-green-500"
-                              }`}
-                            />
+                              className={`w-4 h-4 rounded-full relative ${getBubbleAvatarStyle(player.bubbleColor)}`}
+                            >
+                              {getBubbleEmoji(player.bubbleColor) && (
+                                <div className="absolute inset-0 flex items-center justify-center text-[6px]">
+                                  {getBubbleEmoji(player.bubbleColor)}
+                                </div>
+                              )}
+                            </div>
                             <Text className="text-sm font-medium">
                               {player.name}
                               {isWinner && " 👑"}

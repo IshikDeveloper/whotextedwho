@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Container, Stack, Button, Text, Heading } from "../../lib";
 import { useTheme } from "../../contexts/ThemeContext";
+import { getBubbleAvatarStyle } from "../../utils/bubbleColors";
 
 export default function Lobby({
   roomCode,
@@ -28,35 +29,12 @@ export default function Lobby({
   const canStart = isHost && allReady;
 
   // Get bubble preview style based on color theme
-  const getBubblePreviewStyle = (color) => {
-    switch(color) {
-      case "green":
-        return "bg-green-500";
-      case "blue":
-        return "bg-blue-500";
-      case "rainbow":
-        return "bg-gradient-to-r from-red-500 via-yellow-500 to-purple-500 animate-gradient-shift";
-      case "gold":
-        return "bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-600 animate-shimmer";
-      case "fire":
-        return "bg-gradient-to-t from-red-600 via-orange-500 to-yellow-500 animate-pulse";
-      case "ice":
-        return "bg-gradient-to-b from-cyan-300 via-blue-400 to-blue-600";
-      case "galaxy":
-        return "bg-gradient-to-br from-purple-900 via-blue-800 to-pink-800 animate-twinkle";
-      case "matrix":
-        return "bg-black border-2 border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-pulse-glow";
-      default:
-        return "bg-gray-400";
-    }
-  };
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
       <Container
-        className={`min-h-screen min-w-screen justify-center py-8 transition-colors duration-300 ${
-          theme === "dark" ? "bg-gray-900" : "bg-gray-50"
-        }`}
+        className={`min-h-screen min-w-screen justify-center py-8 transition-colors duration-300 ${theme === "dark" ? "bg-gray-900" : "bg-gray-50"
+          }`}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -79,9 +57,8 @@ export default function Lobby({
               <motion.div
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
-                className={`rounded-xl p-4 ${
-                  theme === "dark" ? "bg-blue-500/20" : "bg-blue-500/10"
-                }`}
+                className={`rounded-xl p-4 ${theme === "dark" ? "bg-blue-500/20" : "bg-blue-500/10"
+                  }`}
               >
                 <Text className={`text-xs opacity-70 text-center mb-2 ${theme === "dark" ? "text-white" : "text-gray-700"}`}>
                   Room Code
@@ -105,9 +82,8 @@ export default function Lobby({
 
             {/* Player List */}
             <div
-              className={`rounded-xl p-4 ${
-                theme === "dark" ? "bg-gray-800 text-gray-100" : "bg-gray-100 text-gray-900"
-              }`}
+              className={`rounded-xl p-4 ${theme === "dark" ? "bg-gray-800 text-gray-100" : "bg-gray-100 text-gray-900"
+                }`}
             >
               <div className="flex items-center justify-between mb-3">
                 <Text className="text-sm font-bold opacity-70">
@@ -125,18 +101,23 @@ export default function Lobby({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className={`flex items-center justify-between p-3 rounded-lg transition ${
-                      player.id === currentPlayer?.id
-                        ? "bg-blue-500/20 border border-blue-500/40"
-                        : theme === "dark"
+                    className={`flex items-center justify-between p-3 rounded-lg transition ${player.id === currentPlayer?.id
+                      ? "bg-blue-500/20 border border-blue-500/40"
+                      : theme === "dark"
                         ? "bg-gray-700"
                         : "bg-gray-200"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-6 h-6 rounded-full flex-shrink-0 ${getBubblePreviewStyle(player.bubbleColor)}`}
-                      />
+                        className={`w-6 h-6 rounded-full flex-shrink-0 relative ${getBubbleAvatarStyle(player.bubbleColor)}`}
+                      >
+                        {getBubbleEmoji(player.bubbleColor) && (
+                          <div className="absolute inset-0 flex items-center justify-center text-[8px]">
+                            {getBubbleEmoji(player.bubbleColor)}
+                          </div>
+                        )}
+                      </div>
                       <Text className="text-sm font-medium">
                         {player.name}
                         {player.id === currentPlayer?.id && " (You)"}
@@ -159,9 +140,8 @@ export default function Lobby({
 
             {/* Game Info */}
             <div
-              className={`rounded-xl p-4 ${
-                theme === "dark" ? "bg-yellow-500/20" : "bg-yellow-500/10"
-              }`}
+              className={`rounded-xl p-4 ${theme === "dark" ? "bg-yellow-500/20" : "bg-yellow-500/10"
+                }`}
             >
               <Text className={`text-xs ${theme === "dark" ? "text-yellow-100" : "text-yellow-900"}`}>
                 <strong>💡 How to play:</strong> You'll be paired anonymously with
@@ -217,9 +197,8 @@ export default function Lobby({
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`rounded-xl p-3 ${
-                  theme === "dark" ? "bg-orange-500/20" : "bg-orange-500/10"
-                }`}
+                className={`rounded-xl p-3 ${theme === "dark" ? "bg-orange-500/20" : "bg-orange-500/10"
+                  }`}
               >
                 <Text className={`text-xs text-center ${theme === "dark" ? "text-orange-100" : "text-orange-900"}`}>
                   ⚠️ Odd number of players! One player will spectate this round.
