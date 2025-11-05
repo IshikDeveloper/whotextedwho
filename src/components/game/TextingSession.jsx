@@ -204,6 +204,7 @@ export default function TextingSession({
 
           {messages.map((msg, index) => {
             const isCurrentPlayer = msg.playerId === currentPlayerId;
+            console.log(msg.bubbleColor)
             return (
               <motion.div
                 key={msg.id || index}
