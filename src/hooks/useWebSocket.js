@@ -1,3 +1,7 @@
+// ============================================
+// FILE: src/hooks/useWebSocket.js
+// ============================================
+
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
@@ -5,7 +9,7 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
   const socketRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
   const [roomCode, setRoomCode] = useState(null);
-  const [gameState, setGameState] = useState('matchmaking'); // matchmaking, lobby, pairing, texting, etc.
+  const [gameState, setGameState] = useState('matchmaking');
   const [players, setPlayers] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -17,7 +21,6 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
   const [votes, setVotes] = useState({ playAgainVotes: 0, menuVotes: 0, total: 0 });
 
   useEffect(() => {
-    // Initialize Socket.IO connection
     socketRef.current = io(serverUrl);
 
     socketRef.current.on('connect', () => {
@@ -33,6 +36,7 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
     // ==================== LOBBY EVENTS ====================
 
     socketRef.current.on('room_created', ({ roomCode, player, isHost }) => {
+      console.log('🏠 Room created:', { player, bubbleColor: player.bubbleColor });
       setRoomCode(roomCode);
       setCurrentPlayer({ ...player, isHost });
       setPlayers([player]);
@@ -40,9 +44,12 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
     });
 
     socketRef.current.on('room_joined', ({ roomCode, players, isHost }) => {
+      console.log('🚪 Room joined:', { players });
       setRoomCode(roomCode);
       setPlayers(players);
-      setCurrentPlayer(players.find(p => p.id === socketRef.current.id));
+      const me = players.find(p => p.id === socketRef.current.id);
+      console.log('👤 Current player:', me);
+      setCurrentPlayer(me);
       setGameState('lobby');
     });
 
@@ -71,17 +78,47 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
       setPairInfo(data);
       
       if (!data.isSpectator) {
-        // Regular player
         setTimeout(() => {
           setGameState('texting');
         }, 3000);
       } else {
-        // Spectator
         setPairs(data.pairs);
         setTimeout(() => {
-          setGameState('texting'); // Spectators watch during texting
+          setGameState('texting');
         }, 3000);
       }
+
+// ============================================
+// FILE: src/components/game/TextingSession.jsx
+// CHECK THE RENDERING SECTION
+// ============================================
+
+// In your TextingSession.jsx, make sure this section looks like this:
+
+// ============================================
+// DEBUGGING CHECKLIST
+// ============================================
+
+/*
+1. Check browser console for these logs:
+   - "🎨 Creating room with bubble color: [color]"
+   - "👤 Current player: { bubbleColor: '...' }"
+   - "💬 Sending message: { bubbleColor: '...' }"
+   - "📨 Message received: { bubbleColor: '...' }"
+   - "🎨 Rendering bubble: { bubbleColor: '...' }"
+
+2. If you see "bubbleColor: undefined" anywhere, that's the issue
+
+3. Check your backend - does it:
+   a) Store bubbleColor when player joins?
+   b) Include bubbleColor in message broadcasts?
+   c) Log the message object before sending?
+
+4. Common issues:
+   - Backend not saving bubbleColor to player object
+   - Backend not including bubbleColor in message object
+   - Message structure mismatch between frontend/backend
+*/
     });
 
     socketRef.current.on('phase_change', ({ phase, duration }) => {
@@ -94,6 +131,11 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
     // ==================== TEXTING EVENTS ====================
 
     socketRef.current.on('message_received', ({ message, isFromPartner }) => {
+      console.log('📨 Message received:', message); // DEBUG
+      console.log('   - Text:', message.text);
+      console.log('   - BubbleColor:', message.bubbleColor);
+      console.log('   - PlayerId:', message.playerId);
+      
       setMessages(prev => [...prev, message]);
     });
 
@@ -135,7 +177,6 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
 
     socketRef.current.on('game_restarting', () => {
       console.log('🔄 Game restarting...');
-      // Reset game state
       setMessages([]);
       setPairInfo(null);
       setPairs([]);
@@ -160,7 +201,6 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
       alert(message);
     });
 
-    // Cleanup on unmount
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
@@ -171,14 +211,17 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
   // ==================== ACTION FUNCTIONS ====================
 
   const createRoom = (username, bubbleColor, matchType) => {
+    console.log('🎨 Creating room with bubble color:', bubbleColor);
     socketRef.current.emit('create_room', { username, bubbleColor, matchType });
   };
 
   const joinRoom = (username, bubbleColor, roomCode) => {
+    console.log('🎨 Joining room with bubble color:', bubbleColor);
     socketRef.current.emit('join_room', { username, bubbleColor, roomCode });
   };
 
   const findPublicMatch = (username, bubbleColor) => {
+    console.log('🎨 Finding public match with bubble color:', bubbleColor);
     socketRef.current.emit('find_public_match', { username, bubbleColor });
   };
 
@@ -191,7 +234,21 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
   };
 
   const sendMessage = (text) => {
-    socketRef.current.emit('send_message', { roomCode, text });
+    // ✅ CRITICAL: Get bubble color from current player
+    const bubbleColor = currentPlayer?.bubbleColor || 'blue';
+    
+    console.log('💬 Sending message:', {
+      text,
+      bubbleColor,
+      currentPlayer: currentPlayer?.name,
+      playerId: currentPlayer?.id
+    });
+    
+    socketRef.current.emit('send_message', { 
+      roomCode, 
+      text,
+      bubbleColor // Include bubble color in the payload
+    });
   };
 
   const startTyping = () => {
@@ -227,31 +284,18 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
   };
 
   return {
-    // Connection state
     isConnected,
     roomCode,
     gameState,
-    
-    // Player data
     players,
     currentPlayer,
-    
-    // Texting phase
     messages,
     partnerTyping,
     timeLeft,
     pairInfo,
-    
-    // Spectator phase
     pairs,
-    
-    // Results
     results,
-    
-    // Post-game
     votes,
-    
-    // Actions
     createRoom,
     joinRoom,
     findPublicMatch,

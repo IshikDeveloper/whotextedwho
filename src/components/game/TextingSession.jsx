@@ -162,8 +162,8 @@ export default function TextingSession({
               repeat: isLowTime ? Infinity : 0,
             }}
             className={`px-4 py-2 rounded-full font-mono font-bold ${isLowTime
-                ? "bg-red-500 text-white"
-                : `${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`
+              ? "bg-red-500 text-white"
+              : `${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`
               }`}
           >
             ⏱️ {formatTime(timeLeft)}
@@ -204,7 +204,16 @@ export default function TextingSession({
 
           {messages.map((msg, index) => {
             const isCurrentPlayer = msg.playerId === currentPlayerId;
-            console.log(msg.bubbleColor)
+
+            // 🐛 DEBUG: Log what we're rendering
+            console.log('🎨 Rendering bubble:', {
+              index,
+              isCurrentPlayer,
+              bubbleColor: msg.bubbleColor,
+              text: msg.text,
+              playerId: msg.playerId
+            });
+
             return (
               <motion.div
                 key={msg.id || index}
@@ -288,8 +297,8 @@ export default function TextingSession({
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
             className={`flex-1 font-mono rounded-xl border px-4 py-3 text-sm focus:border-blue-500 focus:outline-none ${theme === "dark"
-                ? "border-gray-600 bg-gray-700 text-white"
-                : "border-gray-300 bg-white text-black"
+              ? "border-gray-600 bg-gray-700 text-white"
+              : "border-gray-300 bg-white text-black"
               }`}
             maxLength={500}
             disabled={timeLeft === 0}
@@ -299,8 +308,8 @@ export default function TextingSession({
             onClick={handleSend}
             disabled={!inputText.trim() || timeLeft === 0}
             className={`px-6 py-3 rounded-xl font-mono font-bold transition ${inputText.trim() && timeLeft > 0
-                ? "bg-blue-500 text-white hover:bg-blue-600"
-                : `${theme === "dark" ? "bg-gray-700 text-gray-500" : "bg-gray-300 text-gray-500"} cursor-not-allowed`
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : `${theme === "dark" ? "bg-gray-700 text-gray-500" : "bg-gray-300 text-gray-500"} cursor-not-allowed`
               }`}
           >
             Send
