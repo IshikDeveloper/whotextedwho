@@ -233,9 +233,8 @@ export function useWebSocket(serverUrl = import.meta.env.VITE_SOCKET_URL) {
     socketRef.current.emit('start_game', { roomCode });
   };
 
-  const sendMessage = (text) => {
+  const sendMessage = (text, bubbleColor) => {
     // ✅ CRITICAL: Get bubble color from current player
-    const bubbleColor = currentPlayer?.bubbleColor || 'blue';
     
     console.log('💬 Sending message:', {
       text,

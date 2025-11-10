@@ -90,26 +90,30 @@ export default function TextingSession({
     }
   };
 
-  // Handle send message
-  const handleSend = () => {
-    if (!inputText.trim()) return;
+// Handle send message
+const handleSend = () => {
+  if (!inputText.trim()) return;
 
-    const { filtered, wasFiltered } = filterText(inputText);
+  const { filtered, wasFiltered } = filterText(inputText);
 
-    if (wasFiltered) {
-      setFilteredWarning(true);
-      setTimeout(() => setFilteredWarning(false), 3000);
-    }
+  if (wasFiltered) {
+    setFilteredWarning(true);
+    setTimeout(() => setFilteredWarning(false), 3000);
+  }
 
-    onSendMessage?.(filtered);
-    setInputText("");
-    onTypingStop?.();
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-      setTypingTimeout(null);
-    }
-  };
-
+  // Pass both text and bubbleColor as an object
+  onSendMessage?.({
+    text: filtered,
+    bubbleColor: bubbleColor
+  });
+  
+  setInputText("");
+  onTypingStop?.();
+  if (typingTimeout) {
+    clearTimeout(typingTimeout);
+    setTypingTimeout(null);
+  }
+};
   // Handle Enter key
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
